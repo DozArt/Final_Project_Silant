@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'silant_api',
     'django.contrib.sites',
     'django.contrib.flatpages',
     'rest_framework',
