@@ -2,6 +2,18 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+ENTITY_CHOICES = [
+    ('eq', 'Техника'),
+    ('en', 'Двигатель'),
+    ('tr', 'Трансмиссия'),
+    ('da', 'Ведущий мост'),
+    ('sa', 'Управляемый мост'),
+    ('mt', 'Тип ТО'),
+    ('fu', 'Узел отказа'),
+    ('rm', 'Способ восстановления'),
+]
+
+
 class CatalogRecord(models.Model):
     """
     Общая модель для справочника деталей и технических операций.
@@ -12,7 +24,7 @@ class CatalogRecord(models.Model):
     - name: Название записи (детали или операции)
     - description: Описание записи
     """
-    entity_name = models.CharField(max_length=100)
+    entity_name = models.CharField(max_length=100, choices=ENTITY_CHOICES)
     name = models.CharField(max_length=100)
     description = models.TextField()
 
@@ -51,30 +63,35 @@ class Machine(models.Model):
     equipment_model = models.ForeignKey(
         CatalogRecord,
         on_delete=models.CASCADE,
-        limit_choices_to={'entity_name': 'Техника'}
+        limit_choices_to={'entity_name': 'eq'},
+        related_name='equipment_in_machine'
     )
     engine_model = models.ForeignKey(
         CatalogRecord,
         on_delete=models.CASCADE,
-        limit_choices_to={'entity_name': 'Двигатель'}
+        limit_choices_to={'entity_name': 'en'},
+        related_name='engine_in_machine'
     )
     engine_serial_number = models.CharField(max_length=100)
     transmission_model = models.ForeignKey(
         CatalogRecord,
         on_delete=models.CASCADE,
-        limit_choices_to={'entity_name': 'Трансмиссия'}
+        limit_choices_to={'entity_name': 'tr'},
+        related_name='transmission_in_machine'
     )
     transmission_serial_number = models.CharField(max_length=100)
     drive_axle_model = models.ForeignKey(
         CatalogRecord,
         on_delete=models.CASCADE,
-        limit_choices_to={'entity_name': 'Ведущий мост'}
+        limit_choices_to={'entity_name': 'da'},
+        related_name='drive_axle_in_machine'
     )
     drive_axle_serial_number = models.CharField(max_length=100)
     steering_axle_model = models.ForeignKey(
         CatalogRecord,
         on_delete=models.CASCADE,
-        limit_choices_to={'entity_name': 'Управляемый мост'}
+        limit_choices_to={'entity_name': 'sa'},
+        related_name='steering_axle_in_machine'
     )
     steering_axle_serial_number = models.CharField(max_length=100)
     supply_contract_number_and_date = models.CharField(max_length=100)
@@ -84,6 +101,9 @@ class Machine(models.Model):
     equipment_configuration = models.TextField()
     client = models.ForeignKey(User, on_delete=models.CASCADE, related_name='machines')
     service_company = models.ForeignKey(User, on_delete=models.CASCADE, related_name='service_machines')
+
+    def __str__(self):
+        return f'{self.equipment_model.name} ({self.serial_number}) для {self.client}'
 
 
 class Maintenance(models.Model):
@@ -95,7 +115,7 @@ class Maintenance(models.Model):
 
     Поля:
 
-    - maintenance_type: Вид ТО (Плановое ТО или Внеплановое ТО)
+    - maintenance_type: Вид ТО
     - maintenance_date: Дата проведения ТО
     - operating_hours: Наработка, м/час
     - work_order_number: Номер заказ-наряда
@@ -107,7 +127,8 @@ class Maintenance(models.Model):
     maintenance_type = models.ForeignKey(
         CatalogRecord,
         on_delete=models.CASCADE,
-        limit_choices_to={'entity_name': 'ТО'}
+        limit_choices_to={'entity_name': 'mt'},
+        related_name='type_in_maintenances'
     )
     maintenance_date = models.DateField()
     operating_hours = models.FloatField()
@@ -140,13 +161,15 @@ class Claim(models.Model):
     failure_unit = models.ForeignKey(
         CatalogRecord,
         on_delete=models.CASCADE,
-        limit_choices_to={'entity_name': 'Узел отказа'}
+        limit_choices_to={'entity_name': 'fu'},
+        related_name='failure_in_clamps'
     )
     failure_description = models.TextField()
     restoration_method = models.ForeignKey(
         CatalogRecord,
         on_delete=models.CASCADE,
-        limit_choices_to={'entity_name': 'Способ восстановления'}
+        limit_choices_to={'entity_name': 'rm'},
+        related_name='restoration_in_clamps'
     )
     spare_parts_used = models.TextField()
     restoration_date = models.DateField()

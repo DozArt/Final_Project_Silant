@@ -1,3 +1,8 @@
 from django.contrib import admin
+from .models import CatalogRecord, Machine, Maintenance, Claim
 
-# Register your models here.
+
+admin.site.register(CatalogRecord)
+admin.site.register(Machine)
+admin.site.register(Maintenance)
+admin.site.register(Claim)
