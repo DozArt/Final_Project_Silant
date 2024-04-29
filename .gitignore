@@ -1,9 +1,11 @@
 # Django
+backend/venv/
 /venv/
 *.pyc
 *.pyo
 __pycache__/
 *.sqlite3
+backend/silant_app/silant_api/migrations/
 
 # React
 /node_modules/
@@ -11,4 +13,4 @@ __pycache__/
 
 # IDE
 .vscode/
-.idea/
+.idea
