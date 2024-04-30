@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import s from './search.module.css'
+import { observer } from 'mobx-react-lite'
+import { Context } from '../../main'
+
+
 
 const Search = () => {
+    const {store} = useContext(Context)
     const [data, setData] = useState(null);
 
     useEffect(() => {
+        store.loadCatalog()
         axios.get('http://127.0.0.1:8000/api/machines/',
             {
                 headers: {
@@ -22,6 +28,8 @@ const Search = () => {
                 console.error('Error fetching data:', error);
             });
     }, []);
+
+    
 
     return (
         <div>
@@ -48,9 +56,9 @@ const Search = () => {
                         {data.map((item, index) => (
                             <tr key={item.id}>
                                 <td>{index + 1}</td>
-                                <td><a>{item.equipment_model}</a></td>
+                                <td><a>{store.dataCatalogRecords.find(data => data.id === item.equipment_model).name}</a></td>
                                 <td><a>{item.engine_model.name}</a></td>
-                                <td><a>{item.transmission_model}</a></td>
+                                <td><a>{store.dataCatalogRecords.find(data => data.id === item.transmission_model).name}</a></td>
                                 <td><a>{item.drive_axle_model}</a></td>
                                 <td><a>{item.steering_axle_model}</a></td>
                                 <td>{item.shipment_date}</td>
@@ -70,4 +78,4 @@ const Search = () => {
     );
 };
 
-export default Search;
+export default observer(Search);
