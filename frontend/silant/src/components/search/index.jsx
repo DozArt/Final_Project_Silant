@@ -2,7 +2,8 @@ import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import s from './search.module.css'
 import { observer } from 'mobx-react-lite'
-import { Context } from '../../main'
+import { Context } from '@/main'
+import ItemModel from './itemModel';
 
 
 
@@ -56,11 +57,11 @@ const Search = () => {
                         {data.map((item, index) => (
                             <tr key={item.id}>
                                 <td>{index + 1}</td>
-                                <td><a>{store.dataCatalogRecords.find(data => data.id === item.equipment_model).name}</a></td>
-                                <td><a>{item.engine_model.name}</a></td>
-                                <td><a>{store.dataCatalogRecords.find(data => data.id === item.transmission_model).name}</a></td>
-                                <td><a>{item.drive_axle_model}</a></td>
-                                <td><a>{item.steering_axle_model}</a></td>
+                                <ItemModel model_id={item.equipment_model} serialNamber={item.serial_number}/>
+                                <ItemModel model_id={item.engine_model} serialNamber={item.engine_serial_number}/>
+                                <ItemModel model_id={item.transmission_model} serialNamber={item.transmission_serial_number}/>
+                                <ItemModel model_id={item.drive_axle_model} serialNamber={item.drive_axle_serial_number}/>
+                                <ItemModel model_id={item.steering_axle_model} serialNamber={item.steering_axle_serial_number}/>
                                 <td>{item.shipment_date}</td>
                                 <td>{item.client}</td>
                                 <td>{item.consignee}</td>

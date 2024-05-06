@@ -10,12 +10,12 @@ class Store {
     setDataCatalogRecords(value){
         this.dataCatalogRecords = value
     }
-    
+
     constructor() {
         makeAutoObservable(this);
     }
 
-    async loadCatalog(accessToken) {
+    async loadCatalog() {
         try {
             const response = await axios.get(`${this.baseURL}/catalog_record/`, 
                 {
@@ -27,7 +27,7 @@ class Store {
                 }
             )
             this.setDataCatalogRecords(await response.data)
-            console.log('Проверка авторизации с ответом ' + this.setDataCatalogRecords)
+            console.log('каталог загружен')
         } catch (e) {
             console.log(e.response.data.message);
         }
