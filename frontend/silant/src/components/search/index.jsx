@@ -13,12 +13,13 @@ const Search = () => {
 
     useEffect(() => {
         store.loadCatalog()
+        if (localStorage.getItem("accessToken")) {
+        }
         axios.get('http://127.0.0.1:8000/api/machines/',
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    'X-CSRFToken': '1TeToOmytlZyDW3z3SSrXxIveAAdxSSTFaiedl2Z3KNuCN7z7xHAqPrb0O112esj',
+                    Authorization: store.token,
                 }
             }
         )
@@ -28,7 +29,7 @@ const Search = () => {
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
-    }, []);
+    }, [store.token]);
 
     
 
@@ -63,11 +64,11 @@ const Search = () => {
                                 <ItemModel model_id={item.drive_axle_model} serialNamber={item.drive_axle_serial_number}/>
                                 <ItemModel model_id={item.steering_axle_model} serialNamber={item.steering_axle_serial_number}/>
                                 <td>{item.shipment_date}</td>
-                                <td>{item.client}</td>
+                                <td>{item.client.name}</td>
                                 <td>{item.consignee}</td>
                                 <td>{item.delivery_address}</td>
                                 <td>{item.equipment_configuration}</td>
-                                <td>{item.service_company}</td>
+                                <td>{item.service_company.name}</td>
                             </tr>
                         ))}
                     </tbody>

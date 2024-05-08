@@ -3,3 +3,4 @@ djangorestframework == 3.14.0
 markdown == 3.5.1
 django-filter == 23.4
 django-cors-headers == 4.3.1
+djangorestframework-simplejwt == 5.3.1

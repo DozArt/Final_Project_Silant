@@ -13,14 +13,17 @@ const ItemModel = ({model_id, serialNamber}) => {
     const [modelDescription, setModelDescription] = useState('load')
 
     useEffect(() => {
-        try {
-            setModelName(store.dataCatalogRecords.find(data => data.id === model_id).name)
-            setModelDescription(store.dataCatalogRecords.find(data => data.id === model_id).description)
-        } catch {
-            setModelName('loading...')
-            setModelDescription('loading...')
+        if (store.dataCatalogRecords.length > 0 && model_id !== undefined) {
+            const modelData = store.dataCatalogRecords.find(data => data.id == model_id)
+            if (modelData) {
+                setModelName(modelData.name)
+                setModelDescription(modelData.description)
+            } else {
+                setModelName('Model not found')
+                setModelDescription('Model not found')
+            }
         }
-    }, [store.dataCatalogRecords]);
+    }, [model_id, store.dataCatalogRecords]);
 
     const switch_activ = () => {
         setActiv(!activ)
