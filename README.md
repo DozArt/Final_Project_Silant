@@ -8,3 +8,4 @@ Final Project "Silant" for SkillFactory. CRM - service maintenance
 
 - silant - dXvZkYPE
 - trud - JmYNsuKz
+- mgr - HAj3Vwqe

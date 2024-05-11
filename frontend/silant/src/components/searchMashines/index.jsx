@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import s from './search.module.css'
 import { observer } from 'mobx-react-lite'
+import { Link } from 'react-router-dom';
 import { Context } from '@/main'
 import ItemModel from './itemModel';
 
@@ -31,15 +32,15 @@ const Search = () => {
                 }
                 console.error('Error fetching data:', error);
             });
-    }, [store.token]);  // не срабатывает на изменение ??
+    }, [store.token]);
 
-    
-    // подробная информация при глике на 
+    // СДЕЛАТЬ
+    // подробная информация при клике на строку
 
     return (
         <div>
             <div>
-                <a>Добавить технику</a>
+            <Link to='/mashines/add'>Добавить технику</Link>
             </div>
             <h2>Проверьте комплектацию и технические характеристики техники Силант</h2>
             {data ? (
@@ -55,6 +56,7 @@ const Search = () => {
                             {store.isAuth ? ( 
                                 <>
                                 <th>Дата отгрузки с завода</th>
+                                <th>Договор поставки №, дата</th>
                                 <th>Покупатель</th>
                                 <th>Грузополучатель (конечный потребитель)</th>
                                 <th>Адрес поставки (эксплуатации)</th>
@@ -77,6 +79,7 @@ const Search = () => {
                                 {store.isAuth ? ( 
                                     <>
                                     <td>{item.shipment_date}</td>
+                                    <td>{item.supply_contract_number_and_date}</td>
                                     <td>{item.client.name}</td>
                                     <td>{item.consignee}</td>
                                     <td>{item.delivery_address}</td>

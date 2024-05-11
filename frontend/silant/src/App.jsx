@@ -6,6 +6,7 @@ import Header from './components/header'
 import Menu from './components/menu'
 import SearchMaintenance from './components/searchMaintenance'
 import { Context } from '@/main'
+import AddMashine from './components/addMashine'
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
 			
 			<Routes>
 				<Route path="/" element={<Search />} />
+				<Route path="/mashines/add" element={<AddMashine />} />
 				<Route path="/maintenance" element={<SearchMaintenance />} />
 			</Routes>
 			
