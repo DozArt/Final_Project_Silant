@@ -1,0 +1,16 @@
+.table {
+    thead {
+        font-size: 12px;
+        background-color: #163E6C;
+        color: #EBE6D6;
+    }
+
+    th {
+        padding: 5px;
+        min-width: 19px;
+    }
+
+    td {
+        font-size: 12px;
+    }
+}

@@ -55,10 +55,19 @@ const Authorization = () => {
             // setLoginAttemptError('Неправильный логин или пароль');
         }
     };
-
     return (
         <>
-            <a className={s.authorization} onClick={switch_activ} >Authorization</a>
+            {store.isAuth ? (
+                <div>
+                    {store.dataUser.username}
+                    <button onClick={() => store.handleLogout()}>Выйти</button>
+                </div>
+            ) : (
+                <a className={s.authorization} onClick={switch_activ} >Authorization</a>
+            )
+        }
+            
+            
             <div className={activ ? s.modal_on : s.modal_off} onClick={switch_activ}>
                 <div className={s.content} onClick={(event) => event.stopPropagation()}>
                     <button className={s.close} onClick={switch_activ}>X</button>
@@ -80,6 +89,7 @@ const Authorization = () => {
                             onChange={e => passwordHandler(e)}
                         />
                         <button onClick={() => handleLogin(login, password)} disabled={!validation}>Войти</button>
+                        
                 </div>
             </div>
         </>

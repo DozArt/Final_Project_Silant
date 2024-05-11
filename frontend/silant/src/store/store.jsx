@@ -6,20 +6,30 @@ class Store {
     baseURL = 'http://127.0.0.1:8000/api'
 
     dataCatalogRecords = []
+    dataUser = []
     isAuth = false
     token = ''
+    refreshToken = ''
 
     setDataCatalogRecords(value) { this.dataCatalogRecords = value}
+    setDataUser(value) { this.dataUser = value}
     setAuth(bool) { this.isAuth = bool; }
     setAccessToken(value) {
         localStorage.setItem("accessToken", value);
         this.token = `Bearer ${value}`;
-        console.log('токен изменен')
+        this.setAuth(true)
+        console.log('set Access Token')
+    }
+    setRefreshToken(value) {
+        this.refreshToken = value
+        localStorage.setItem("refreshToken", value);
+        console.log('setRefreshToken')
     }
 
     constructor() {
         makeAutoObservable(this);
     }
+
 
     async handleLogin(login, password) {
         try {
@@ -28,17 +38,15 @@ class Store {
                 "password": password,
               }, {
                 headers: {
-                    'Content-Type': 'application/json',
                     Accept: 'application/json',
-                    'X-CSRFToken': '1TeToOmytlZyDW3z3SSrXxIveAAdxSSTFaiedl2Z3KNuCN7z7xHAqPrb0O112esj',
                 }
             });
             if (response.status === 200) {
-                const accessToken = response.data.access;
                 this.setAuth(true);
-                this.setAccessToken(accessToken)
+                this.setAccessToken(response.data.access)
+                this.setRefreshToken(response.data.refresh)
                 console.log('Login successful');
-                // this.checkAuth(accessToken);
+                this.handleUser()
             } else {
                 console.error('Login failed');
             }
@@ -48,14 +56,69 @@ class Store {
         }
     };
 
+    async handleLogout() {
+        try {
+            this.setAuth(false)
+            localStorage.removeItem("accessToken");
+          } catch (err) {
+            console.log("logout error");
+          }
+    }
+
+    async handlerRefreshToken(refreshToken) {
+        try {
+            const response = await axios.post(`${this.baseURL}/token/refresh/`, {
+                "refresh": refreshToken,
+              }, {
+                headers: {
+                    Accept: 'application/json',
+                }
+            });
+            if (response.status === 200) {
+                this.setAuth(true);
+                this.setAccessToken(response.data.access)
+                // this.setRefreshToken(response.data.refresh)
+                this.handleUser()
+                console.log('Refresh token successful');
+            } else {
+                console.error('Refresh token failed', response.status);
+            }
+        } catch (error) {
+            console.error('Error during login in store:', error);
+            throw error;
+        }
+    };
+
+    async handleUser() {
+        try {
+            axios.get('http://127.0.0.1:8000/api/user/',
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: this.token,
+                }
+            }
+        )
+            .then(response => {
+                console.log('полученны данные пользователя');
+                this.setDataUser(response.data)
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+            
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
+
     async loadCatalog() {
         try {
             const response = await axios.get(`${this.baseURL}/catalog_record/`, 
                 {
                     headers: {
-                        'Content-Type': 'application/json',
                         Accept: 'application/json',
-                        'X-CSRFToken': '1TeToOmytlZyDW3z3SSrXxIveAAdxSSTFaiedl2Z3KNuCN7z7xHAqPrb0O112esj',
                     }
                 }
             )

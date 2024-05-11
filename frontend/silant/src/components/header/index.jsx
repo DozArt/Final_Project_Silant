@@ -1,7 +1,7 @@
 import React from 'react';
 import s from './header.module.css'
-import logo_img from '../../../public/images/Logotype.svg'
-import big_logo_img from '../../../public/images/Logotype-RGB.svg'
+import logo_img from '/images/Logotype.svg'
+import big_logo_img from '/images/Logotype-RGB.svg'
 import Authorization from '../authorization';
 
 
@@ -14,6 +14,7 @@ const Header = () => {
                 <Authorization />
             </div>
             <h3 className={s.title}>Электронно-сервисная книжка "Мой Силант"</h3>
+            
         </div>
     );
 };

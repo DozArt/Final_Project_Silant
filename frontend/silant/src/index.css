@@ -1,7 +1,7 @@
 
 @font-face {
   font-family: "PT_Astra_Sans"; 
-  src: url("../public/fonts/PT_Astra_Sans/PT-Astra-Sans_Regular.ttf") format("truetype"); 
+  src: url("/fonts/PT_Astra_Sans/PT-Astra-Sans_Regular.ttf") format("truetype"); 
   font-style: normal; 
   font-weight: normal; 
 } 

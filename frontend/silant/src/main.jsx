@@ -1,4 +1,5 @@
 import React, { createContext }from 'react'
+import {BrowserRouter} from 'react-router-dom'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
@@ -13,8 +14,8 @@ export const Context = createContext({
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <React.StrictMode>
+    <BrowserRouter>
       <App />
-    </React.StrictMode>
+    </BrowserRouter>
   </React.StrictMode>,
 )
