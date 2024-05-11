@@ -29,7 +29,7 @@ class CatalogRecord(models.Model):
     description = models.TextField()
 
     def __str__(self):
-        return self.name
+        return f'{[item[1] for item in ENTITY_CHOICES if item[0] == self.entity_name][0]} {self.name}'
 
 
 class Machine(models.Model):
@@ -161,7 +161,7 @@ class Claim(models.Model):
     failure_unit = models.ForeignKey(
         CatalogRecord,
         on_delete=models.CASCADE,
-        limit_choices_to={'entity_name': 'fu'},
+        limit_choices_to={'entity_name__in': ['sa', 'en', 'tr', 'da']},
         related_name='failure_in_clamps'
     )
     failure_description = models.TextField()

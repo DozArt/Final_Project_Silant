@@ -1,10 +1,21 @@
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from rest_framework import permissions
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.decorators import permission_classes
 
-from .serializers import MachineSerializer, MaintenanceSerializer, ClaimSerializer, CatalogRecordSerializer
+from .serializers import UserSerializer, MachineSerializer, MaintenanceSerializer, ClaimSerializer, CatalogRecordSerializer
 from .models import Machine, Maintenance, Claim, CatalogRecord
+
+
+class UserView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
 
 
 class CatalogRecordViewSet(viewsets.ReadOnlyModelViewSet):
@@ -20,7 +31,6 @@ class MachineViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user  # Получаем текущего пользователя
-        print(user.groups.all())
         if user.groups.filter(name='client').exists():
             # Пользователь принадлежит к указанной группе
             return Machine.objects.filter(client=user)  # Возвращаем только сущности, принадлежащие этому пользователю
