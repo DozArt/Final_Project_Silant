@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
 
@@ -94,13 +95,19 @@ class Machine(models.Model):
         related_name='steering_axle_in_machine'
     )
     steering_axle_serial_number = models.CharField(max_length=100)
-    supply_contract_number_and_date = models.CharField(max_length=100)
-    shipment_date = models.DateField()
-    consignee = models.CharField(max_length=100)
-    delivery_address = models.TextField()
-    equipment_configuration = models.TextField()
-    client = models.ForeignKey(User, on_delete=models.CASCADE, related_name='machines')
-    service_company = models.ForeignKey(User, on_delete=models.CASCADE, related_name='service_machines')
+    supply_contract_number_and_date = models.CharField(max_length=100, blank=True, null=True)
+    shipment_date = models.DateField(blank=True, null=True)
+    consignee = models.CharField(max_length=100, blank=True, null=True)
+    delivery_address = models.TextField(blank=True, null=True)
+    equipment_configuration = models.TextField(blank=True, null=True)
+    client = models.ForeignKey(User, on_delete=models.CASCADE, related_name='machines', blank=True, null=True)
+    service_company = models.ForeignKey(User, on_delete=models.CASCADE, related_name='service_machines', blank=True, null=True)
+
+    def clean(self):
+        attributes_ownership = [self.supply_contract_number_and_date, self.shipment_date, self.consignee,
+                                self.delivery_address, self.equipment_configuration, self.client, self.service_company]
+        if any(attributes_ownership) and not all(attributes_ownership):  # все или ничего
+            raise ValidationError('Either all fields must be filled or none.')
 
     def __str__(self):
         return f'{self.equipment_model.name} ({self.serial_number}) для {self.client}'
