@@ -1,0 +1,10 @@
+.unit {
+    background-color: var(--silant-yellow);
+    min-width: 300px;
+    /* padding: 10px; */
+    flex-grow: 1;
+    flex: 1 1 0;
+    div {
+        margin: 10px;
+    }
+}

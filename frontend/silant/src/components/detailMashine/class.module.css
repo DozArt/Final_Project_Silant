@@ -1,0 +1,7 @@
+.all_data {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 10px;
+}

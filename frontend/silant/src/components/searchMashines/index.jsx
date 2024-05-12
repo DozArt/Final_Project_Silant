@@ -2,15 +2,16 @@ import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import s from './search.module.css'
 import { observer } from 'mobx-react-lite'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '@/main'
-import ItemModel from './itemModel';
+import ItemModel from '../searchMaintenance/itemModel';
 
 
 
 const Search = () => {
     const {store} = useContext(Context)
     const [data, setData] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get('http://127.0.0.1:8000/api/machines/',
@@ -40,8 +41,9 @@ const Search = () => {
     return (
         <div>
             <div>
-            <Link to='/mashines/add'>Добавить технику</Link>
+            [<Link to='/mashines/add'>Добавить технику</Link>]?
             </div>
+            <div>Поиск[________] (ререндер по фильтру)</div>
             <h2>Проверьте комплектацию и технические характеристики техники Силант</h2>
             {data ? (
                 <table className={s.table} >
@@ -67,9 +69,9 @@ const Search = () => {
                             
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className='default'>
                         {data.map((item, index) => (
-                            <tr key={item.id}>
+                            <tr key={item.id} onClick={() => navigate(`/machine/${item.id}`)}>
                                 <td>{index + 1}</td>
                                 <ItemModel model_id={item.equipment_model} serialNamber={item.serial_number}/>
                                 <ItemModel model_id={item.engine_model} serialNamber={item.engine_serial_number}/>

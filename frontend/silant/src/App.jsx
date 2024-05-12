@@ -7,6 +7,7 @@ import Menu from './components/menu'
 import SearchMaintenance from './components/searchMaintenance'
 import { Context } from '@/main'
 import AddMashine from './components/addMashine'
+import DetailMashine from './components/detailMashine'
 
 function App() {
 
@@ -21,10 +22,11 @@ function App() {
 	return (
 		<>
 			<Header />
-			<Menu />
+			{store.isAuth ? (<Menu />) : ''}
 			
 			<Routes>
-				<Route path="/" element={<Search />} />
+				<Route path="/machine" element={<Search />} />
+				<Route path="/machine/:id" element={<DetailMashine />} />
 				<Route path="/mashines/add" element={<AddMashine />} />
 				<Route path="/maintenance" element={<SearchMaintenance />} />
 			</Routes>

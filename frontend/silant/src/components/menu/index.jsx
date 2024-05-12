@@ -10,7 +10,7 @@ const Menu = () => {
 
     return (
         <div className={s.unit}>
-            <Link to='/'>Общая информация</Link>
+            <Link to='/machine'>Общая информация</Link>
             <Link to='/maintenance'>ТО</Link>
             <a>Рекламации</a>
         </div>

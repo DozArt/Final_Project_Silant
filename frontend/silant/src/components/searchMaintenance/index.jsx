@@ -34,7 +34,8 @@ const SearchMaintenance = () => {
         }
     }, [store.token]);
 
-    
+    // если клиент то все ТО собственных машин
+    // если сервисная организация то все машины 
 
     return (
         <div>
@@ -53,10 +54,10 @@ const SearchMaintenance = () => {
                             <th>Организация проводившая ТО</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className='default'>
                         {data.map((item, index) => (
-                            <tr key={item.id}>
-                                <td>{index + 1} (details)</td>
+                            <tr key={item.id} className={s.row}>
+                                <td>{index + 1}</td>
                                 <ItemModel model_id={item.machine.id} serialNamber={item.machine.serial_number} extract='namber'/>
                                 <ItemModel model_id={item.maintenance_type} serialNamber={item.serial_number}/>
                                 <td>{item.maintenance_date}</td>

@@ -11,6 +11,24 @@ class Store {
     token = ''
     refreshToken = ''
 
+    entityChoices = [
+        { value: 'eq', label: 'Техника' },
+        { value: 'en', label: 'Двигатель' },
+        { value: 'tr', label: 'Трансмиссия' },
+        { value: 'da', label: 'Ведущий мост' },
+        { value: 'sa', label: 'Управляемый мост' },
+        { value: 'mt', label: 'Тип ТО' },
+        { value: 'fu', label: 'Узел отказа' },
+        { value: 'rm', label: 'Способ восстановления' },
+    ];
+
+    getValueLabel = (value) => {
+        const choice = this.entityChoices.find(item => item.value === value);
+        return choice ? choice.label : 'Unknown';
+    };
+
+    modelData = (model_id) => this.dataCatalogRecords.find(data => data.id == model_id)
+
     setDataCatalogRecords(value) { this.dataCatalogRecords = value}
     setDataUser(value) { this.dataUser = value}
     setAuth(bool) { this.isAuth = bool; }
