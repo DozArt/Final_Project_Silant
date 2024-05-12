@@ -144,6 +144,9 @@ class Maintenance(models.Model):
     servicing_organization = models.ForeignKey(User, on_delete=models.CASCADE, related_name='service_maintenances')
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE, related_name='maintenance')
 
+    def __str__(self):
+        return f'{self.machine.serial_number} - {self.maintenance_type.name}'
+
 
 class Claim(models.Model):
     """
