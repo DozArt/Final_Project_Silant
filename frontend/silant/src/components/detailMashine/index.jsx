@@ -7,6 +7,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Context } from '@/main'
 import ItemModel from '../searchMaintenance/itemModel';
 import ItemMachin from './itemMachin';
+import Menu from '../menu';
 
 
 
@@ -40,12 +41,16 @@ const DetailMashine = () => {
 
     return (
         <div>
-            [свои ссылки на общее ТО и рекламации к конкретной машине]
             {data ? (
                 <>
-                    <h2>Техника - {store.modelData(data.equipment_model).name}</h2>
+                    <div className={s.title}>
+                        <h1>{store.modelData(data.equipment_model).name} - №{data.serial_number}</h1>
+                        <p>{store.modelData(data.equipment_model).description}</p>
+                    </div>
+                    <h2>Информация о комплектации и технических характеристиках вашей техники</h2>
+                    <Menu />
                     <div className={s.all_data}>
-                        <ItemMachin model_id={data.equipment_model} serial_number={data.serial_number} />
+                        {/* <ItemMachin model_id={data.equipment_model} serial_number={data.serial_number} /> */}
                         <ItemMachin model_id={data.engine_model} serial_number={data.engine_serial_number} />
                         <ItemMachin model_id={data.transmission_model} serial_number={data.transmission_serial_number} />
                         <ItemMachin model_id={data.drive_axle_model} serial_number={data.drive_axle_serial_number} />

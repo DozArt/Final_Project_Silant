@@ -8,6 +8,7 @@ import SearchMaintenance from './components/searchMaintenance'
 import { Context } from '@/main'
 import AddMashine from './components/addMashine'
 import DetailMashine from './components/detailMashine'
+import TitlePage from './components/titlePage'
 
 function App() {
 
@@ -22,8 +23,6 @@ function App() {
 	return (
 		<>
 			<Header />
-			{store.isAuth ? (<Menu />) : ''}
-			
 			<Routes>
 				<Route path="/machine" element={<Search />} />
 				<Route path="/machine/:id" element={<DetailMashine />} />

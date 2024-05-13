@@ -5,6 +5,8 @@ import { observer } from 'mobx-react-lite'
 import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '@/main'
 import ItemModel from '../searchMaintenance/itemModel';
+import Menu from '../menu';
+import TitlePage from '../titlePage';
 
 
 
@@ -12,9 +14,11 @@ const Search = () => {
     const {store} = useContext(Context)
     const [data, setData] = useState(null);
     const navigate = useNavigate();
+    const [search, setSearch] = useState('')
 
+    // после нажатия кнопки поиск меняем search
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/api/machines/',
+        axios.get('http://127.0.0.1:8000/api/machines/?search=0021',
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -33,18 +37,17 @@ const Search = () => {
                 }
                 console.error('Error fetching data:', error);
             });
-    }, [store.token]);
+    }, [store.token, search]);
 
     // СДЕЛАТЬ
     // подробная информация при клике на строку
 
     return (
         <div>
-            <div>
-            [<Link to='/mashines/add'>Добавить технику</Link>]?
-            </div>
-            <div>Поиск[________] (ререндер по фильтру)</div>
+            {store.isAuth ? (<TitlePage />) : ''}
             <h2>Проверьте комплектацию и технические характеристики техники Силант</h2>
+            <Menu />
+            <div>Поиск[________] (ререндер по фильтру)</div>
             {data ? (
                 <table className={s.table} >
                     <thead>

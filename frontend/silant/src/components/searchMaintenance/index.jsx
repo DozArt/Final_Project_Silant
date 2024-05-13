@@ -4,6 +4,8 @@ import s from './search.module.css'
 import { observer } from 'mobx-react-lite'
 import { Context } from '@/main'
 import ItemModel from './itemModel';
+import Menu from '../menu';
+import TitlePage from '../titlePage';
 
 
 
@@ -39,7 +41,9 @@ const SearchMaintenance = () => {
 
     return (
         <div>
+            {store.isAuth ? (<TitlePage />) : ''}
             <h2>Информация о проведенных ТО вашей техники</h2>
+            <Menu />
             {data ? (
                 <table className={s.table} >
                     <thead>

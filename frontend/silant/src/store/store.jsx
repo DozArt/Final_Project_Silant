@@ -7,6 +7,7 @@ class Store {
 
     dataCatalogRecords = []
     dataUser = []
+    role = ''
     isAuth = false
     token = ''
     refreshToken = ''
@@ -22,6 +23,7 @@ class Store {
         { value: 'rm', label: 'Способ восстановления' },
     ];
 
+    
     getValueLabel = (value) => {
         const choice = this.entityChoices.find(item => item.value === value);
         return choice ? choice.label : 'Unknown';
@@ -30,8 +32,20 @@ class Store {
     modelData = (model_id) => this.dataCatalogRecords.find(data => data.id == model_id)
 
     setDataCatalogRecords(value) { this.dataCatalogRecords = value}
+
     setDataUser(value) { this.dataUser = value}
+
+    setRole(value) {
+        switch (value) {
+            case 'service_company':
+                this.role = 'сервисная компания'
+                break
+            case 'client':
+                this.role = 'клиент'
+        }
+    }
     setAuth(bool) { this.isAuth = bool; }
+
     setAccessToken(value) {
         localStorage.setItem("accessToken", value);
         this.token = `Bearer ${value}`;
@@ -48,6 +62,9 @@ class Store {
         makeAutoObservable(this);
     }
 
+    handleRole(data) {
+
+    }
 
     async handleLogin(login, password) {
         try {
@@ -120,6 +137,7 @@ class Store {
             .then(response => {
                 console.log('полученны данные пользователя');
                 this.setDataUser(response.data)
+                this.setRole(response.data.groups[0])
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
