@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets, generics
-from rest_framework import permissions
+from rest_framework import permissions, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import permission_classes
@@ -28,6 +28,8 @@ class MachineViewSet(viewsets.ModelViewSet):
     # permission_classes = [permissions.IsAuthenticated]
     queryset = Machine.objects.all()
     serializer_class = MachineSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['serial_number']
 
     def get_queryset(self):
         user = self.request.user  # Получаем текущего пользователя
