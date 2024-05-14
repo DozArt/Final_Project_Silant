@@ -78,8 +78,10 @@ class MaintenanceSerializer(serializers.ModelSerializer):
             'name': instance.servicing_organization.first_name,
         }
         representation['machine'] = {
-            'id': instance.machine.equipment_model.id,
+            'id': instance.machine.id,
+            'equipment_model': instance.machine.equipment_model.id,
             'serial_number': instance.machine.serial_number,
+            'name': instance.machine.serial_number,
             'client': instance.machine.client.id,
         }
 

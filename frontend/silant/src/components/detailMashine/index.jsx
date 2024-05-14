@@ -14,53 +14,35 @@ import TitlePage from '../titlePage';
 
 const DetailMashine = () => {
     const {store} = useContext(Context)
-    const [data, setData] = useState(null);
+    const [data, setData] = useState(store.machine);
     const navigate = useNavigate();
     const { id } = useParams();
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/machines/${id}/`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: store.token,
-                }
-            }
-        )
-            .then(response => {
-                setData(response.data);
-                console.log('=> setData detail Mashine')
-            })
-            .catch(error => {
-                if (error.response.status === 401) {
-                    console.error('запускаем рефреш');
-                    store.handlerRefreshToken(localStorage.getItem('refreshToken'))
-                }
-                console.error('Error fetching data:', error);
-            });
+        store.hendlerMachine(id)
     }, [store.token]);
 
     return (
         <div>
-            {data ? (
+            {store.machine ? (
                 <>
-                    {store.isAuth && data ? (<TitlePage machine_id={data.equipment_model} machine_sn={data.serial_number} />) : ''}
+                    {store.isAuth && store.machine ? (<TitlePage machine_id={store.machine.equipment_model} machine_sn={store.machine.serial_number} />) : ''}
                     <h2>Информация о комплектации и технических характеристиках вашей техники</h2>
                     <Menu />
                     <div className={s.all_data}>
                         {/* <ItemMachin model_id={data.equipment_model} serial_number={data.serial_number} /> */}
-                        <ItemMachin model_id={data.engine_model} serial_number={data.engine_serial_number} />
-                        <ItemMachin model_id={data.transmission_model} serial_number={data.transmission_serial_number} />
-                        <ItemMachin model_id={data.drive_axle_model} serial_number={data.drive_axle_serial_number} />
-                        <ItemMachin model_id={data.steering_axle_model} serial_number={data.steering_axle_serial_number} />
+                        <ItemMachin model_id={store.machine.engine_model} serial_number={store.machine.engine_serial_number} />
+                        <ItemMachin model_id={store.machine.transmission_model} serial_number={store.machine.transmission_serial_number} />
+                        <ItemMachin model_id={store.machine.drive_axle_model} serial_number={store.machine.drive_axle_serial_number} />
+                        <ItemMachin model_id={store.machine.steering_axle_model} serial_number={store.machine.steering_axle_serial_number} />
                         <div className={style_borrowing.unit}>
-                            <div>Договор поставки - {data.supply_contract_number_and_date}</div>
-                            <div>Дата отгрузки с завода - {data.shipment_date}</div>
-                            <div>Грузополучатель (конечный потребитель) - {data.consignee}</div>
-                            <div>Адрес поставки (эксплуатации) - {data.delivery_address}</div>
-                            <div>Комплектация - {data.equipment_configuration}</div>
-                            <div>Клиент - {data.client.name}</div>
-                            <div>Сервисная организация - {data.service_company.name}</div>
+                            <div>Договор поставки - {store.machine.supply_contract_number_and_date}</div>
+                            <div>Дата отгрузки с завода - {store.machine.shipment_date}</div>
+                            <div>Грузополучатель (конечный потребитель) - {store.machine.consignee}</div>
+                            <div>Адрес поставки (эксплуатации) - {store.machine.delivery_address}</div>
+                            <div>Комплектация - {store.machine.equipment_configuration}</div>
+                            <div>Клиент - {store.machine.client.name}</div>
+                            <div>Сервисная организация - {store.machine.service_company.name}</div>
                         </div>
                     </div>
                     

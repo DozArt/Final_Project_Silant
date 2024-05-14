@@ -19,7 +19,9 @@ const Search = () => {
                                             {field: 'transmission_model', value: ''},
                                             {field: 'drive_axle_model', value: ''},
                                             {field: 'steering_axle_model', value: ''},
+                                            {field: 'client', value: ''},
     ])
+    const [client, setClient] = useState(null)
     const navigate = useNavigate();
     const [search, setSearch] = useState('')
     const [inputSearch, setInputSearch] = useState('')
@@ -45,7 +47,8 @@ const Search = () => {
                 });
                 setData(response.data);
                 setDataFilter(response.data);
-                
+
+                setClient(response.data.map(item => item.client))
                 console.log('=> setData Mashines')
             })
             .catch(error => {
@@ -63,10 +66,11 @@ const Search = () => {
             model.field === sample.target.id ? { ...model, value: sample.target.value } : model
         )
         setFilter(updateFilter)
+        console.log(updateFilter)
         let filteredData = data;
         updateFilter.forEach(field => {
             if (field.value != '') {
-                filteredData = filteredData.filter(item => item[field.field] == field.value);
+                filteredData = filteredData.filter(item => item[field.field].id == field.value || item[field.field] == field.value);
             }
         });
         setDataFilter(filteredData)
@@ -108,7 +112,7 @@ const Search = () => {
                                 <InputSample
                                     onChange={(e) => filterData(e)}
                                     name='drive_axle_model'
-                                    select={store.dataCatalogRecords.filter(item => item.entity_name == 'ta')}/>
+                                    select={store.dataCatalogRecords.filter(item => item.entity_name == 'da')}/>
                             </th>
                             <th>Модель управляемого моста
                                 <InputSample
@@ -120,7 +124,12 @@ const Search = () => {
                                 <>
                                 <th>Дата отгрузки с завода</th>
                                 <th>Договор поставки №, дата</th>
-                                <th>Покупатель</th>
+                                <th>Покупатель
+                                    <InputSample
+                                        onChange={(e) => filterData(e)}
+                                        name='client'
+                                        select={client}/>
+                                </th>
                                 <th>Грузополучатель (конечный потребитель)</th>
                                 <th>Адрес поставки (эксплуатации)</th>
                                 <th>Комплектация (доп. опции)</th>

@@ -11,6 +11,7 @@ class Store {
     isAuth = false
     token = ''
     refreshToken = ''
+    machine = ''
 
     entityChoices = [
         { value: 'eq', label: 'Техника' },
@@ -23,7 +24,7 @@ class Store {
         { value: 'rm', label: 'Способ восстановления' },
     ];
 
-    
+
     getValueLabel = (value) => {
         const choice = this.entityChoices.find(item => item.value === value);
         return choice ? choice.label : 'Unknown';
@@ -35,6 +36,8 @@ class Store {
 
     setDataUser(value) { this.dataUser = value}
 
+    setMachine(value) {this.machine = value}
+    
     setRole(value) {
         switch (value) {
             case 'service_company':
@@ -90,6 +93,31 @@ class Store {
             throw error;
         }
     };
+
+    async hendlerMachine(id) {
+        try {
+            axios.get(`${this.baseURL}/machines/${id}/`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: this.token,
+                    }
+                }
+            )
+                .then(response => {
+                    this.setMachine(response.data);
+                    console.log('=> setData detail Mashine')
+                    return response.data
+                })
+        } catch (error) {
+            if (error.response.status === 401) {
+                console.error('запускаем рефреш');
+                this.handlerRefreshToken(localStorage.getItem('refreshToken'))
+            }
+            console.error('Error response machine:', error);
+            throw error;
+        }
+    }
 
     async handleLogout() {
         try {
