@@ -47,13 +47,15 @@ class MaintenanceViewSet(viewsets.ModelViewSet):
     queryset = Maintenance.objects.all()
     serializer_class = MaintenanceSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['machine__id']  # поверь функционал
 
     def get_queryset(self):
         user = self.request.user
         if user.groups.filter(name='service_company').exists():
             # Фильтруем записи по авторизованному пользователю
             return Maintenance.objects.filter(servicing_organization=user)
-        if user.groups.filter(name='client').exists():
+        elif user.groups.filter(name='client').exists():
             return Maintenance.objects.filter(machine__client=user)
 
 

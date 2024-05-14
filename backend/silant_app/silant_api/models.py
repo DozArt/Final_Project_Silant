@@ -129,7 +129,6 @@ class Maintenance(models.Model):
     - work_order_date: Дата заказ-наряда
     - servicing_organization: Организация, проводившая ТО
     - machine: Связь с машиной, к которой относится ТО
-    - service_company: Сервисная компания, обслуживающая машину
     """
     maintenance_type = models.ForeignKey(
         CatalogRecord,
@@ -185,3 +184,6 @@ class Claim(models.Model):
     restoration_date = models.DateField()
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE, related_name='claims')
     service_company = models.ForeignKey(User, on_delete=models.CASCADE, related_name='service_claims')
+
+    def __str__(self):
+        return f'{self.machine.serial_number} -> {self.failure_unit}'

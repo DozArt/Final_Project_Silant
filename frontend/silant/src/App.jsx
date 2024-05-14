@@ -28,6 +28,7 @@ function App() {
 				<Route path="/machine/:id" element={<DetailMashine />} />
 				<Route path="/mashines/add" element={<AddMashine />} />
 				<Route path="/maintenance" element={<SearchMaintenance />} />
+				<Route path="/maintenance/:id" element={<SearchMaintenance />} />
 			</Routes>
 			
 		</>

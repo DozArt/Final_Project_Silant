@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import s from './search.module.css'
 import { observer } from 'mobx-react-lite'
+import { useParams } from 'react-router-dom';
 import { Context } from '@/main'
 import ItemModel from './itemModel';
 import Menu from '../menu';
@@ -12,10 +13,13 @@ import TitlePage from '../titlePage';
 const SearchMaintenance = () => {
     const {store} = useContext(Context)
     const [data, setData] = useState(null);
+    const { id } = useParams();
+    const [filter, setFilter] = useState(id)
+    
 
     useEffect(() => {
         if (localStorage.getItem('accessToken')) {
-            axios.get('http://127.0.0.1:8000/api/maintenances/',
+            axios.get(`http://127.0.0.1:8000/api/maintenances/${filter ? '?search='+filter : ''}`,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -34,14 +38,18 @@ const SearchMaintenance = () => {
                 console.error('Error fetching data:', response.status, error);
             }); 
         }
+
     }, [store.token]);
 
-    // если клиент то все ТО собственных машин
-    // если сервисная организация то все машины 
+    // useEffect(() => {
+
+    // }, [store.token]);
+
+    // если есть id то заголовок должен быть 
 
     return (
         <div>
-            {store.isAuth ? (<TitlePage />) : ''}
+            {store.isAuth && data ? (<TitlePage machine_id={data[0].machine.id} machine_sn={data[0].machine.serial_number} />) : ''}    
             <h2>Информация о проведенных ТО вашей техники</h2>
             <Menu />
             {data ? (

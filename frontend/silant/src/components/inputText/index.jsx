@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import s from './style.module.css'
 
-const Input = ({label, type, name, onChange, value, select, defaultValue, errorMesage, placeholder}) => {
+const InputSample = ({label, type, name, onChange, onClick, value, select, defaultValue, errorMesage, placeholder}) => {
 
     const [ditry, setDitry] = useState(false)
     const blurHandler = (e) => {
@@ -33,14 +33,15 @@ const Input = ({label, type, name, onChange, value, select, defaultValue, errorM
         <div className={(ditry && errorMesage) ? s.error_designation : s.unit}>
             {label ? label_output : ''}
             {select ? (
-                <select id={name}>
-                    <option>------</option>
-                    {select.map((item, index) => (<option key={index} value={item.id}>{item.name}</option>))}
+                <select id={name} onChange={onChange}>
+                    <option value=''>------</option>
+                    {select.map((item, index) => (<option key={index} value={item.id} >{item.name}</option>))}
                 </select>
             ) : (
                 <input 
                     onBlur={e => blurHandler(e)}
                     onChange={onChange}
+                    onClick={onClick}
                     name={name}
                     // value={value}
                     defaultValue={defaultValue}
@@ -54,4 +55,4 @@ const Input = ({label, type, name, onChange, value, select, defaultValue, errorM
     );
 };
 
-export default Input;
+export default InputSample;

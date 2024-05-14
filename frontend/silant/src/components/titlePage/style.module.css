@@ -7,3 +7,13 @@
 .item {
     margin: 0px;
 }
+.title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+
+    p {
+        margin: 0px;
+    }
+}

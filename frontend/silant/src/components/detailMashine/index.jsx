@@ -8,6 +8,7 @@ import { Context } from '@/main'
 import ItemModel from '../searchMaintenance/itemModel';
 import ItemMachin from './itemMachin';
 import Menu from '../menu';
+import TitlePage from '../titlePage';
 
 
 
@@ -43,10 +44,7 @@ const DetailMashine = () => {
         <div>
             {data ? (
                 <>
-                    <div className={s.title}>
-                        <h1>{store.modelData(data.equipment_model).name} - №{data.serial_number}</h1>
-                        <p>{store.modelData(data.equipment_model).description}</p>
-                    </div>
+                    {store.isAuth && data ? (<TitlePage machine_id={data.equipment_model} machine_sn={data.serial_number} />) : ''}
                     <h2>Информация о комплектации и технических характеристиках вашей техники</h2>
                     <Menu />
                     <div className={s.all_data}>
@@ -75,7 +73,6 @@ const DetailMashine = () => {
             ) : (
                 <p>Loading...</p>
             )}
-            <div>[Список всех ТО]</div>
             <div>
             <Link to='/mashines/add'>Добавить ТО</Link>
             </div>

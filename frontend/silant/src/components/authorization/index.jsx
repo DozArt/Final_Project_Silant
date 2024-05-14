@@ -71,25 +71,25 @@ const Authorization = () => {
             <div className={activ ? s.modal_on : s.modal_off} onClick={switch_activ}>
                 <div className={s.content} onClick={(event) => event.stopPropagation()}>
                     <button className={s.close} onClick={switch_activ}>X</button>
-                        
-                        <input 
-                            // onBlur={e => blurHandler(e)}
-                            // value={value}
-                            type = 'text'
-                            placeholder='login'
-                            autoComplete="current-login"
-                            onChange={e => emailHandler(e)}
-                        />
-                        <input 
-                            // onBlur={e => blurHandler(e)}
-                            // value={value}
-                            type = 'password'
-                            placeholder='password'
-                            autoComplete="current-password"
-                            onChange={e => passwordHandler(e)}
-                        />
-                        <button onClick={() => handleLogin(login, password)} disabled={!validation}>Войти</button>
-                        
+                        <form onSubmit={e => e.preventDefault()}>
+                            <input 
+                                // onBlur={e => blurHandler(e)}
+                                // value={value}
+                                type = 'text'
+                                placeholder='login'
+                                autoComplete="current-login"
+                                onChange={e => emailHandler(e)}
+                            />
+                            <input 
+                                // onBlur={e => blurHandler(e)}
+                                // value={value}
+                                type = 'password'
+                                placeholder='password'
+                                autoComplete="current-password"
+                                onChange={e => passwordHandler(e)}
+                            />
+                            <button onClick={() => handleLogin(login, password)} disabled={!validation}>Войти</button>
+                        </form>
                 </div>
             </div>
         </>

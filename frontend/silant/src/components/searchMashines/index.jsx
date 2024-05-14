@@ -7,18 +7,26 @@ import { Context } from '@/main'
 import ItemModel from '../searchMaintenance/itemModel';
 import Menu from '../menu';
 import TitlePage from '../titlePage';
-
+import InputSample from '../inputText';
 
 
 const Search = () => {
     const {store} = useContext(Context)
     const [data, setData] = useState(null);
+    const [dataFilter, setDataFilter] = useState(null)
+    const [filter, setFilter] = useState([  {field: 'equipment_model', value: ''},
+                                            {field: 'engine_model', value: ''},
+                                            {field: 'transmission_model', value: ''},
+                                            {field: 'drive_axle_model', value: ''},
+                                            {field: 'steering_axle_model', value: ''},
+    ])
     const navigate = useNavigate();
     const [search, setSearch] = useState('')
+    const [inputSearch, setInputSearch] = useState('')
 
-    // после нажатия кнопки поиск меняем search
+
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/api/machines/?search=0021',
+        axios.get(`http://127.0.0.1:8000/api/machines/${search ? '?search='+search : ''}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -27,7 +35,17 @@ const Search = () => {
             }
         )
             .then(response => {
+                response.data.sort((a, b) => {
+                    // Преобразуем даты в объекты Date для сравнения
+                    var dateA = new Date(a.shipment_date);
+                    var dateB = new Date(b.shipment_date);
+                    
+                    // Сравниваем даты и возвращаем результат сравнения
+                    return dateA - dateB;
+                });
                 setData(response.data);
+                setDataFilter(response.data);
+                
                 console.log('=> setData Mashines')
             })
             .catch(error => {
@@ -39,25 +57,65 @@ const Search = () => {
             });
     }, [store.token, search]);
 
-    // СДЕЛАТЬ
-    // подробная информация при клике на строку
+
+    const filterData = (sample) => {
+        const updateFilter = filter.map(model => 
+            model.field === sample.target.id ? { ...model, value: sample.target.value } : model
+        )
+        setFilter(updateFilter)
+        let filteredData = data;
+        updateFilter.forEach(field => {
+            if (field.value != '') {
+                filteredData = filteredData.filter(item => item[field.field] == field.value);
+            }
+        });
+        setDataFilter(filteredData)
+    }
 
     return (
         <div>
             {store.isAuth ? (<TitlePage />) : ''}
             <h2>Проверьте комплектацию и технические характеристики техники Силант</h2>
-            <Menu />
-            <div>Поиск[________] (ререндер по фильтру)</div>
-            {data ? (
+            {store.isAuth ? (<Menu />) : ''}
+            <div className={s.search}>
+                <InputSample placeholder='Заводской номер' name='searchSerialNamber' onChange={e => setInputSearch(e.target.value)}/>
+                <button onClick={() => setSearch(inputSearch)}>Поиск</button>
+            </div>
+            {dataFilter ? (
                 <table className={s.table} >
                     <thead>
                         <tr>
                             <th>№ п/п</th>
-                            <th>модель техники</th>
-                            <th>Модель двигателя</th>
-                            <th>Модель трансмиссии (производитель, артикул)</th>
-                            <th>Модель ведущего моста</th>
-                            <th>Модель управляемого моста</th>
+                            <th>модель техники 
+                                <InputSample
+                                    onChange={(e) => filterData(e)}
+                                    name='equipment_model'
+                                    select={store.dataCatalogRecords.filter(item => item.entity_name == 'eq')}/>
+                            </th>
+                            <th>Модель двигателя 
+                                <InputSample
+                                    onChange={(e) => filterData(e)}
+                                    name='engine_model'
+                                    select={store.dataCatalogRecords.filter(item => item.entity_name == 'en')}/>
+                            </th>
+                            <th>Модель трансмиссии (производитель, артикул)
+                                <InputSample
+                                    onChange={(e) => filterData(e)}
+                                    name='transmission_model'
+                                    select={store.dataCatalogRecords.filter(item => item.entity_name == 'tr')}/>
+                            </th>
+                            <th>Модель ведущего моста
+                                <InputSample
+                                    onChange={(e) => filterData(e)}
+                                    name='drive_axle_model'
+                                    select={store.dataCatalogRecords.filter(item => item.entity_name == 'ta')}/>
+                            </th>
+                            <th>Модель управляемого моста
+                                <InputSample
+                                    onChange={(e) => filterData(e)}
+                                    name='steering_axle_model'
+                                    select={store.dataCatalogRecords.filter(item => item.entity_name == 'sa')}/>
+                            </th>
                             {store.isAuth ? ( 
                                 <>
                                 <th>Дата отгрузки с завода</th>
@@ -73,7 +131,7 @@ const Search = () => {
                         </tr>
                     </thead>
                     <tbody className='default'>
-                        {data.map((item, index) => (
+                        {dataFilter.map((item, index) => (
                             <tr key={item.id} onClick={() => navigate(`/machine/${item.id}`)}>
                                 <td>{index + 1}</td>
                                 <ItemModel model_id={item.equipment_model} serialNamber={item.serial_number}/>
@@ -99,6 +157,8 @@ const Search = () => {
             ) : (
                 <p>Loading...</p>
             )}
+
+            
         </div>
     );
 };

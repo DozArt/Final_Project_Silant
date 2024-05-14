@@ -14,3 +14,6 @@
         font-size: 12px;
     }
 }
+.search {
+    display: flex;
+}
