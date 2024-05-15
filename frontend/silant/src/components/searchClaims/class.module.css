@@ -8,7 +8,7 @@
 }
 .table {
     margin: auto;
-
+    
     thead {
         font-size: 12px;
         background-color: #163E6C;
@@ -18,13 +18,11 @@
     th {
         padding: 5px;
         min-width: 19px;
-        vertical-align: bottom;
     }
 
     td {
         font-size: 12px;
     }
-}
-.search {
-    display: flex;
+
+
 }

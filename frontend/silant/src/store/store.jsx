@@ -12,6 +12,7 @@ class Store {
     token = ''
     refreshToken = ''
     machine = ''
+    machines = []
 
     entityChoices = [
         { value: 'eq', label: 'Техника' },
@@ -38,6 +39,8 @@ class Store {
 
     setMachine(value) {this.machine = value}
     
+    setMachines(value) {this.machines = value}
+
     setRole(value) {
         switch (value) {
             case 'service_company':
@@ -94,6 +97,33 @@ class Store {
         }
     };
 
+    async hendlerMachines() {
+        try {
+            axios.get(`${this.baseURL}/machines/`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: this.token,
+                    }
+                }
+            )
+                .then(response => {
+                    const list = response.data.map(({ id, serial_number }) => ({
+                        id: id,
+                        name: serial_number
+                    }))
+                    this.setMachines(list);
+                })
+        } catch (error) {
+            if (error.response.status === 401) {
+                console.error('запускаем рефреш');
+                this.handlerRefreshToken(localStorage.getItem('refreshToken'))
+            }
+            console.error('Error response machines:', error);
+            throw error;
+        }
+    }
+
     async hendlerMachine(id) {
         try {
             axios.get(`${this.baseURL}/machines/${id}/`,
@@ -123,6 +153,7 @@ class Store {
         try {
             this.setAuth(false)
             localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
           } catch (err) {
             console.log("logout error");
           }
@@ -143,6 +174,7 @@ class Store {
                 // this.setRefreshToken(response.data.refresh)
                 this.handleUser()
                 console.log('Refresh token successful');
+                return true
             } else {
                 console.error('Refresh token failed', response.status);
             }
@@ -154,7 +186,7 @@ class Store {
 
     async handleUser() {
         try {
-            axios.get('http://127.0.0.1:8000/api/user/',
+            axios.get(`${this.baseURL}/user/`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -168,6 +200,10 @@ class Store {
                 this.setRole(response.data.groups[0])
             })
             .catch(error => {
+                if (error.response.status === 401) {
+                    console.error('запускаем рефреш');
+                    this.handlerRefreshToken(localStorage.getItem('refreshToken'))
+                }
                 console.error('Error fetching data:', error);
             });
             

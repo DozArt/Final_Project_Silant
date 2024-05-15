@@ -1,29 +1,30 @@
 import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import s from './search.module.css'
+import s from './class.module.css'
 import { observer } from 'mobx-react-lite'
 import { Link, useParams } from 'react-router-dom';
 import { Context } from '@/main'
-import ItemModel from './itemModel';
+import ItemModel from '../searchMaintenance/itemModel';
 import Menu from '../menu';
 import TitlePage from '../titlePage';
 import InputSample from '../inputText';
 
 
 
-const SearchMaintenance = () => {
+const SearchClaims = () => {
     const {store} = useContext(Context)
     const [data, setData] = useState([]);
     const [dataFilter, setDataFilter] = useState(null)
-    const [filter, setFilter] = useState([  {field: 'maintenance_type', value: ''},
+    const [filter, setFilter] = useState([  {field: 'restoration_method', value: ''},
                                             {field: 'machine', value: ''},
+                                            {field: 'failure_unit', value: ''},
     ])
     const [machines, setMachines] = useState(null)
     const { id } = useParams();
-    console.log(machines)
+
     useEffect(() => {
         id ? store.hendlerMachine(id) : ''
-        axios.get(`${store.baseURL}/maintenances/${id ? '?search='+id : ''}`,
+        axios.get(`http://127.0.0.1:8000/api/claims/${id ? '?search='+id : ''}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -33,8 +34,8 @@ const SearchMaintenance = () => {
         )
         .then(response => {
             response.data.sort((a, b) => {
-                var dateA = new Date(a.maintenance_date);
-                var dateB = new Date(b.maintenance_date);
+                var dateA = new Date(a.failure_date);
+                var dateB = new Date(b.failure_date);
                 return dateA - dateB;
             });
             setData(response.data);
@@ -63,6 +64,7 @@ const SearchMaintenance = () => {
             model.field == sample.target.id ? { ...model, value: sample.target.value } : model
         )
         setFilter(updateFilter)
+        console.log(updateFilter)
         let filteredData = data;
         updateFilter.forEach(field => {
             if (field.value != '') {
@@ -70,13 +72,17 @@ const SearchMaintenance = () => {
             }
         });
         setDataFilter(filteredData)
+    }
 
+    const extractEntity = (item) => {
+
+        return store.dataCatalogRecords.find(cat => cat.id == item).entity_name
     }
 
     return (
         <div className={s.unit}>
             {store.isAuth && id ? (<TitlePage machine_id={store.machine.equipment_model} machine_sn={store.machine.serial_number} />) : ''}    
-            <h2>Информация о проведенных ТО вашей техники</h2>
+            <h2>Информация о рекламациях вашей техники</h2>
             <Menu />
             {dataFilter ? (
                 <div className={s.scrolling}>
@@ -90,17 +96,25 @@ const SearchMaintenance = () => {
                                     name='machine'
                                     select={machines}/>
                             </th>
-                            <th>Вид ТО
+                            <th>Дата отказа</th>
+                            <th>Наработка м/час</th>
+                            <th>Узел отказа
                                 <InputSample
                                     onChange={(e) => filterData(e)}
-                                    name='maintenance_type'
-                                    select={store.dataCatalogRecords.filter(item => item.entity_name == 'mt')}/>
+                                    name='failure_unit'
+                                    select={store.dataCatalogRecords.filter(item => ['en', 'tr', 'da', 'sa'].includes(item.entity_name))}/>
                             </th>
-                            <th>Дата проведения</th>
-                            <th>Наработка м/час</th>
-                            <th>№ заказ-наряда</th>
-                            <th>Дата заказ-наряда</th>
-                            <th>Организация проводившая ТО</th>
+                            <th>Описание отказа</th>
+                            <th>Способ восстановления
+                                <InputSample
+                                    onChange={(e) => filterData(e)}
+                                    name='restoration_method'
+                                    select={store.dataCatalogRecords.filter(item => item.entity_name == 'rm')}/>
+                            </th>
+                            <th>Используемые запасные части</th>
+                            <th>Дата восстановления</th>
+                            <th>Время простоя техники</th>
+                            <th>Сервисная компания</th>
                         </tr>
                     </thead>
                     <tbody className='default'>
@@ -108,12 +122,20 @@ const SearchMaintenance = () => {
                             <tr key={item.id} className={s.row}>
                                 <td>{index + 1}</td>
                                 <ItemModel model_id={item.machine.equipment_model} serialNamber={item.machine.serial_number} extract='namber'/>
-                                <ItemModel model_id={item.maintenance_type} serialNamber={item.serial_number}/>
-                                <td>{item.maintenance_date}</td>
+                                <td>{item.failure_date}</td>
                                 <td>{item.operating_hours}</td>
-                                <td>{item.work_order_number}</td>
-                                <td>{item.work_order_date}</td>
-                                <td>{item.servicing_organization.id == item.machine.client ? 'смостоятельно' : item.servicing_organization.name}</td>
+                                <ItemModel model_id={item.failure_unit.id} />
+                                {/* <ItemModel model_id={item.failure_unit.id}  serialNamber={item.failure_unit.entity_name} extract='namber'/> */}
+                                <td>{item.failure_description}</td>
+                                <ItemModel model_id={item.restoration_method}/>
+                                <td>{item.spare_parts_used}</td>
+                                <td>{item.restoration_date}</td>
+                                <td>{
+                                    new Date(item.restoration_date).getDate() - new Date(item.failure_date).getDate()
+                                }</td>
+                                <td>{item.service_company.name}</td>
+                                {/* <ItemModel model_id={item.restoration_method}/> */}
+                                {/* <td>{item.servicing_organization.id == item.machine.client ? 'смостоятельно' : item.servicing_organization.name}</td> */}
                             </tr>
                         ))}
                     </tbody>
@@ -123,10 +145,10 @@ const SearchMaintenance = () => {
                 <p>Loading...</p>
             )}
             <div>
-            <Link to='/maintenance/add'>Добавить ТО</Link>
+            <Link to='/claims/add'>Добавить рекламацию</Link>
             </div>
         </div>
     );
 };
 
-export default observer(SearchMaintenance);
+export default observer(SearchClaims);

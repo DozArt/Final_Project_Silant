@@ -13,7 +13,7 @@ import InputSample from '../inputText';
 const Search = () => {
     const {store} = useContext(Context)
     const [data, setData] = useState(null);
-    const [dataFilter, setDataFilter] = useState(null)
+    const [dataFilter, setDataFilter] = useState('')
     const [filter, setFilter] = useState([  {field: 'equipment_model', value: ''},
                                             {field: 'engine_model', value: ''},
                                             {field: 'transmission_model', value: ''},
@@ -28,7 +28,7 @@ const Search = () => {
 
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/machines/${search ? '?search='+search : ''}`,
+        axios.get(`${store.baseURL}/machines/${search ? '?search='+search : ''}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -48,7 +48,14 @@ const Search = () => {
                 setData(response.data);
                 setDataFilter(response.data);
 
-                setClient(response.data.map(item => item.client))
+                const noUniqueData = response.data.map(item => item.client)  // список клиентов
+                //отсеиваем дубликаты
+                const uniqueData = noUniqueData.filter((item, index, self) =>
+                    index === self.findIndex((t) => (
+                        t.client === item.client
+                    ))
+                );
+                setClient(uniqueData)
                 console.log('=> setData Mashines')
             })
             .catch(error => {
@@ -77,7 +84,7 @@ const Search = () => {
     }
 
     return (
-        <div>
+        <div className={s.unit}>
             {store.isAuth ? (<TitlePage />) : ''}
             <h2>Проверьте комплектацию и технические характеристики техники Силант</h2>
             {store.isAuth ? (<Menu />) : ''}
@@ -86,6 +93,7 @@ const Search = () => {
                 <button onClick={() => setSearch(inputSearch)}>Поиск</button>
             </div>
             {dataFilter ? (
+                <div className={s.scrolling}>
                 <table className={s.table} >
                     <thead>
                         <tr>
@@ -140,7 +148,7 @@ const Search = () => {
                         </tr>
                     </thead>
                     <tbody className='default'>
-                        {dataFilter.map((item, index) => (
+                        {dataFilter[0] ? (dataFilter.map((item, index) => (
                             <tr key={item.id} onClick={() => navigate(`/machine/${item.id}`)}>
                                 <td>{index + 1}</td>
                                 <ItemModel model_id={item.equipment_model} serialNamber={item.serial_number}/>
@@ -160,9 +168,10 @@ const Search = () => {
                                     </>
                                 ) : ''}
                             </tr>
-                        ))}
+                        ))) : <tr><td></td><td>Данные не найдены</td></tr>}
                     </tbody>
                 </table>
+                </div>
             ) : (
                 <p>Loading...</p>
             )}

@@ -55,9 +55,6 @@ const DetailMashine = () => {
             ) : (
                 <p>Loading...</p>
             )}
-            <div>
-            <Link to='/mashines/add'>Добавить ТО</Link>
-            </div>
         </div>
     );
 };

@@ -10,7 +10,7 @@ const Header = () => {
     return (
         <div className={s.unit}>
             <div className={s.top_string}>
-            <Link to='/machine'><img src={big_logo_img} className={s.logo} /></Link>
+            <Link to='/machine'><img src={logo_img} className={s.logo} /></Link>
                 <a className={s.contacts}>+1 234 56-78-90, telegram</a>
                 <Authorization />
             </div>

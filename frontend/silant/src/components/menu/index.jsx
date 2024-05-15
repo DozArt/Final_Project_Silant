@@ -16,7 +16,7 @@ const Menu = () => {
         <div className={s.unit}>
             <Link to={`/machine${id ? '/'+id : ''}`}>Общая информация</Link>
             <Link to={`/maintenance${id ? '/'+id : ''}`}>ТО</Link>
-            <a>Рекламации</a>
+            <Link to={`/claims${id ? '/'+id : ''}`}>Рекламации</Link>
         </div>
         
     );

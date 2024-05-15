@@ -6,9 +6,11 @@ import Header from './components/header'
 import Menu from './components/menu'
 import SearchMaintenance from './components/searchMaintenance'
 import { Context } from '@/main'
-import AddMashine from './components/addMashine'
+import AddMaintenance from './components/addMaintenance'
 import DetailMashine from './components/detailMashine'
 import TitlePage from './components/titlePage'
+import SearchClaims from './components/searchClaims'
+import AddClaims from './components/addClaims'
 
 function App() {
 
@@ -24,11 +26,15 @@ function App() {
 		<>
 			<Header />
 			<Routes>
+				<Route path="/" element={<Search />} />
 				<Route path="/machine" element={<Search />} />
 				<Route path="/machine/:id" element={<DetailMashine />} />
-				<Route path="/mashines/add" element={<AddMashine />} />
 				<Route path="/maintenance" element={<SearchMaintenance />} />
 				<Route path="/maintenance/:id" element={<SearchMaintenance />} />
+				<Route path="/maintenance/add" element={<AddMaintenance />} />
+				<Route path="/claims" element={<SearchClaims />} />
+				<Route path="/claims/:id" element={<SearchClaims />} />
+				<Route path="/claims/add" element={<AddClaims />} />
 			</Routes>
 			
 		</>
