@@ -92,3 +92,24 @@ class ClaimSerializer(serializers.ModelSerializer):
     class Meta:
         model = Claim
         fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        # user = self.context['request'].user
+
+        representation['service_company'] = {
+            'id': instance.service_company.id,
+            'name': instance.service_company.first_name,
+        }
+        representation['machine'] = {
+            'id': instance.machine.id,
+            'equipment_model': instance.machine.equipment_model.id,
+            'serial_number': instance.machine.serial_number,
+            'name': instance.machine.serial_number,
+            'client': instance.machine.client.id,
+        }
+        representation['failure_unit'] = {
+            'id': instance.failure_unit.id,
+            'entity_name': instance.failure_unit.entity_name
+        }
+        return representation

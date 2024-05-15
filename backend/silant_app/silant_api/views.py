@@ -25,7 +25,7 @@ class CatalogRecordViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class MachineViewSet(viewsets.ModelViewSet):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
     queryset = Machine.objects.all()
     serializer_class = MachineSerializer
     filter_backends = [filters.SearchFilter]
@@ -46,9 +46,9 @@ class MachineViewSet(viewsets.ModelViewSet):
 class MaintenanceViewSet(viewsets.ModelViewSet):
     queryset = Maintenance.objects.all()
     serializer_class = MaintenanceSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['machine__id']  # поверь функционал
+    search_fields = ['machine__id']  # поверь функционал на разных ролях
 
     def get_queryset(self):
         user = self.request.user
@@ -60,7 +60,17 @@ class MaintenanceViewSet(viewsets.ModelViewSet):
 
 
 class ClaimViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
-
+    permission_classes = [permissions.DjangoModelPermissions]
     queryset = Claim.objects.all()
     serializer_class = ClaimSerializer
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['machine__id']
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name='service_company').exists():
+            # Фильтруем записи по авторизованному пользователю
+            return Claim.objects.filter(service_company=user)
+        elif user.groups.filter(name='client').exists():
+            return Claim.objects.filter(machine__client=user)
