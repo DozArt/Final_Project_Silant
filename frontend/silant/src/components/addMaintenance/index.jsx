@@ -56,7 +56,7 @@ const AddMaintenance = () => {
 
 
     return (
-        <div>
+        <div className={s.unit}>
             <h2>Добавление ТО</h2>
 			<form>
 				<Input label='Техника' 

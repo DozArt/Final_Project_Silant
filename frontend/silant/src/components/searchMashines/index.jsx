@@ -35,36 +35,36 @@ const Search = () => {
                 }
             }
         )
-            .then(response => {
-                response.data.sort((a, b) => {
-                    // Преобразуем даты в объекты Date для сравнения
-                    var dateA = new Date(a.shipment_date);
-                    var dateB = new Date(b.shipment_date);
-                    
-                    // Сравниваем даты и возвращаем результат сравнения
-                    return dateA - dateB;
-                });
-                setData(response.data);
-                setDataFilter(response.data);
-
-                const noUniqueData = response.data.map(item => item.client)  // список клиентов
-                //отсеиваем дубликаты
-                const uniqueData = noUniqueData.filter((item, index, self) =>
-                    index === self.findIndex((t) => (
-                        t.client === item.client
-                    ))
-                );
-                setClient(uniqueData)
-                console.log('=> setData Mashines')
-            })
-            .catch(error => {
-                if (error.response.status === 401) {
-                    console.error('запускаем рефреш');
-                    store.handlerRefreshToken(localStorage.getItem('refreshToken'))
-                } else {
-                    console.error('Error fetching data:', error);
-                }
+        .then(response => {
+            response.data.sort((a, b) => {
+                // Преобразуем даты в объекты Date для сравнения
+                var dateA = new Date(a.shipment_date);
+                var dateB = new Date(b.shipment_date);
+                
+                // Сравниваем даты и возвращаем результат сравнения
+                return dateA - dateB;
             });
+            setData(response.data);
+            setDataFilter(response.data);
+
+            const noUniqueData = response.data.map(item => item.client)  // список клиентов
+            //отсеиваем дубликаты
+            const uniqueData = noUniqueData.filter((item, index, self) =>
+                index === self.findIndex((t) => (
+                    t.client === item.client
+                ))
+            );
+            setClient(uniqueData)
+            console.log('=> setData Mashines')
+        })
+        .catch(error => {
+            if (error.response.status === 401) {
+                console.error('запускаем рефреш');
+                store.handlerRefreshToken(localStorage.getItem('refreshToken'))
+            } else {
+                console.error('Error fetching data:', error);
+            }
+        });
     }, [store.token, search]);
 
 

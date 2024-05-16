@@ -48,8 +48,6 @@ class Store {
                 break
             case 'client':
                 this.role = 'клиент'
-            default:
-                this.role = 'role is not defined'
         }
     }
     setAuth(bool) { this.isAuth = bool; }
