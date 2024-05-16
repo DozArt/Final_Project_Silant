@@ -19,6 +19,7 @@ const SearchMaintenance = () => {
                                             {field: 'machine', value: ''},
     ])
     const [machines, setMachines] = useState(null)
+    const [services, setServices] = useState(null)
     const { id } = useParams();
     const navigate = useNavigate();
     
@@ -49,6 +50,14 @@ const SearchMaintenance = () => {
                 ))
             );
             setMachines(uniqueData)
+
+            const noUniqueDataServices = response.data.map(item => item.servicing_organization)
+            const uniqueDataServices = noUniqueDataServices.filter((item, index, self) =>
+                index === self.findIndex((t) => (
+                    t.id === item.id
+                ))
+            );
+            setServices(uniqueDataServices)
         })
         .catch(error => {
             if (error.response.status === 401) {
@@ -104,7 +113,12 @@ const SearchMaintenance = () => {
                             <th>Наработка м/час</th>
                             <th>№ заказ-наряда</th>
                             <th>Дата заказ-наряда</th>
-                            <th>Организация проводившая ТО</th>
+                            <th>Организация проводившая ТО
+                            <InputSample
+                                    onChange={(e) => filterData(e)}
+                                    name='machine'
+                                    select={services}/>
+                            </th>
                         </tr>
                     </thead>
                     <tbody className='default'>

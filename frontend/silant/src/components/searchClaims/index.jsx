@@ -20,6 +20,7 @@ const SearchClaims = () => {
                                             {field: 'failure_unit', value: ''},
     ])
     const [machines, setMachines] = useState(null)
+    const [services, setServices] = useState(null)
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -50,6 +51,15 @@ const SearchClaims = () => {
                 ))
             );
             setMachines(uniqueData)
+
+            const noUniqueDataServices = response.data.map(item => item.service_company)
+            const uniqueDataServices = noUniqueDataServices.filter((item, index, self) =>
+                index === self.findIndex((t) => (
+                    t.id === item.id
+                ))
+            );
+            setServices(uniqueDataServices)
+
         })
         .catch(error => {
             if (error.response.status === 401) {
@@ -117,7 +127,12 @@ const SearchClaims = () => {
                             <th>Используемые запасные части</th>
                             <th>Дата восстановления</th>
                             <th>Время простоя техники</th>
-                            <th>Сервисная компания</th>
+                            <th>Сервисная компания
+                                <InputSample
+                                    onChange={(e) => filterData(e)}
+                                    name='machine'
+                                    select={services}/>
+                            </th>
                         </tr>
                     </thead>
                     <tbody className='default'>
@@ -147,7 +162,7 @@ const SearchClaims = () => {
             ) : (
                 <p>Loading...</p>
             )}
-            {(store.dataUser.groups[0] == 'service_company') ? 
+            {(store.dataUser.groups == 'service_company') ? 
                 <Link to='/claims/add'><div className={s.link_add}>Добавить рекламацию</div></Link>
             : ''}
             

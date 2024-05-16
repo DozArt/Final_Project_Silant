@@ -21,6 +21,7 @@ const Search = () => {
                                             {field: 'client', value: ''},
     ])
     const [client, setClient] = useState(null)
+    const [services, setServices] = useState(null)
     const navigate = useNavigate();
     const [search, setSearch] = useState('')
     const [inputSearch, setInputSearch] = useState('')
@@ -48,7 +49,6 @@ const Search = () => {
             setDataFilter(response.data);
 
             const noUniqueData = response.data.map(item => item.client)  // список клиентов
-            console.log(noUniqueData)
             //отсеиваем дубликаты
             const uniqueData = noUniqueData.filter((item, index, self) =>
                 index === self.findIndex((t) => (
@@ -56,6 +56,15 @@ const Search = () => {
                 ))
             );
             setClient(uniqueData)
+
+            const noUniqueDataServices = response.data.map(item => item.service_company)
+            const uniqueDataServices = noUniqueDataServices.filter((item, index, self) =>
+                index === self.findIndex((t) => (
+                    t.id === item.id
+                ))
+            );
+            setServices(uniqueDataServices)
+
             console.log('=> setData Mashines')
         })
         .catch(error => {
@@ -141,7 +150,12 @@ const Search = () => {
                                 <th>Грузополучатель (конечный потребитель)</th>
                                 <th>Адрес поставки (эксплуатации)</th>
                                 <th>Комплектация (доп. опции)</th>
-                                <th>Сервисная компания</th>
+                                <th>Сервисная компания
+                                    <InputSample
+                                        onChange={(e) => filterData(e)}
+                                        name='machine'
+                                        select={services}/>
+                                </th>
                                 </>
                             ) : ''}
                             
