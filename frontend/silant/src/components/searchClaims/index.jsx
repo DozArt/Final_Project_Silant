@@ -43,6 +43,7 @@ const SearchClaims = () => {
             setDataFilter(response.data);
 
             const noUniqueData = response.data.map(item => item.machine)
+            console.log(noUniqueData)
             const uniqueData = noUniqueData.filter((item, index, self) =>
                 index === self.findIndex((t) => (
                     t.id === item.id
@@ -146,7 +147,10 @@ const SearchClaims = () => {
             ) : (
                 <p>Loading...</p>
             )}
-            <Link to='/claims/add'><div className={s.link_add}>Добавить рекламацию</div></Link>
+            {(store.dataUser.groups[0] == 'service_company') ? 
+                <Link to='/claims/add'><div className={s.link_add}>Добавить рекламацию</div></Link>
+            : ''}
+            
         </div>
     );
 };

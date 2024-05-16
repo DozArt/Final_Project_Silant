@@ -48,10 +48,11 @@ const Search = () => {
             setDataFilter(response.data);
 
             const noUniqueData = response.data.map(item => item.client)  // список клиентов
+            console.log(noUniqueData)
             //отсеиваем дубликаты
             const uniqueData = noUniqueData.filter((item, index, self) =>
                 index === self.findIndex((t) => (
-                    t.client === item.client
+                    t.name === item.name
                 ))
             );
             setClient(uniqueData)
