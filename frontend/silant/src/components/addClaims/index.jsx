@@ -80,7 +80,7 @@ const AddClaims = () => {
 				<Input label='Узел отказа' 
 						name='failure_unit'
 						onChange={(e) => updateData(e)}
-						// select={store.dataCatalogRecords.filter(item => item.entity_name == 'mt')}
+						select={store.dataCatalogRecords.filter(item => ['sa', 'da', 'tr', 'en'].includes(item.entity_name))}
 				/>
 				<Input label='Описание отказа' 
 						name='failure_description'
