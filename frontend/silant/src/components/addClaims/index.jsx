@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import s from './style.module.css'
 import { observer } from 'mobx-react-lite'
+import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '@/main'
 import Input from '../inputText';
 
@@ -9,6 +10,7 @@ import Input from '../inputText';
 
 const AddClaims = () => {
     const {store} = useContext(Context)
+	const navigate = useNavigate();
     const [data, setData] = useState({
 		failure_date: '2024-05-15',
 		operating_hours: 333,
@@ -23,11 +25,12 @@ const AddClaims = () => {
 
     useEffect(() => {
 		store.hendlerMachines()
-        
+		setData()
     }, []);
 
 	const updateData = (sample) => {
 		const newData = { ...data };
+		newData['service_company'] = store.dataUser.id;
 		newData[sample.target.id] = sample.target.value;
 		setData(newData)
 		console.log(newData)
@@ -46,6 +49,7 @@ const AddClaims = () => {
             .then(response => {
                 setData(response.data);
                 console.log('=> отправка')
+				navigate(`/claims/`)
             })
             .catch(error => {
                 if (error.response.status === 401) {

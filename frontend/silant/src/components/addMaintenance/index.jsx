@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import s from './style.module.css'
 import { observer } from 'mobx-react-lite'
+import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '@/main'
 import Input from '../inputText';
 
@@ -9,6 +10,7 @@ import Input from '../inputText';
 
 const AddMaintenance = () => {
     const {store} = useContext(Context)
+	const navigate = useNavigate();
     const [data, setData] = useState({
 		maintenance_date: '2024-05-15',
 		operating_hours: 333,
@@ -44,6 +46,7 @@ const AddMaintenance = () => {
             .then(response => {
                 setData(response.data);
                 console.log('=> отправка')
+				navigate(`/maintenance/`)
             })
             .catch(error => {
                 if (error.response.status === 401) {
