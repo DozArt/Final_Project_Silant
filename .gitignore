@@ -4,7 +4,6 @@ backend/venv/
 *.pyc
 *.pyo
 __pycache__/
-*.sqlite3
 backend/silant_app/silant_api/migrations/
 
 # React
