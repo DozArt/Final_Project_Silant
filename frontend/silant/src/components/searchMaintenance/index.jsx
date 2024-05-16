@@ -2,11 +2,11 @@ import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import s from './search.module.css'
 import { observer } from 'mobx-react-lite'
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Context } from '@/main'
 import ItemModel from './itemModel';
 import Menu from '../menu';
-import TitlePage from '../titlePage';
+import TitleMacine from '../titleMachine';
 import InputSample from '../inputText';
 
 
@@ -20,7 +20,9 @@ const SearchMaintenance = () => {
     ])
     const [machines, setMachines] = useState(null)
     const { id } = useParams();
-    console.log(machines)
+    const navigate = useNavigate();
+    
+    
     useEffect(() => {
         id ? store.hendlerMachine(id) : ''
         axios.get(`${store.baseURL}/maintenances/${id ? '?search='+id : ''}`,
@@ -50,10 +52,12 @@ const SearchMaintenance = () => {
         })
         .catch(error => {
             if (error.response.status === 401) {
-                console.error('запускаем рефреш');
+                console.log('запускаем рефреш');
                 store.handlerRefreshToken(localStorage.getItem('refreshToken'))
+            } else {
+                console.error('Error fetching data:', response.status, error);
             }
-            console.error('Error fetching data:', response.status, error);
+            
         }); 
 
     }, [store.token]);
@@ -75,7 +79,7 @@ const SearchMaintenance = () => {
 
     return (
         <div className={s.unit}>
-            {store.isAuth && id ? (<TitlePage machine_id={store.machine.equipment_model} machine_sn={store.machine.serial_number} />) : ''}    
+            <TitleMacine />
             <h2>Информация о проведенных ТО вашей техники</h2>
             <Menu />
             {dataFilter ? (
@@ -105,7 +109,7 @@ const SearchMaintenance = () => {
                     </thead>
                     <tbody className='default'>
                         {dataFilter.map((item, index) => (
-                            <tr key={item.id} className={s.row}>
+                            <tr key={item.id} className={s.row} onClick={() => navigate(`/machine/${item.machine.id}`)} >
                                 <td>{index + 1}</td>
                                 <ItemModel model_id={item.machine.equipment_model} serialNamber={item.machine.serial_number} extract='namber'/>
                                 <ItemModel model_id={item.maintenance_type} serialNamber={item.serial_number}/>
@@ -122,9 +126,9 @@ const SearchMaintenance = () => {
             ) : (
                 <p>Loading...</p>
             )}
-            <div>
-            <Link to='/maintenance/add'>Добавить ТО</Link>
-            </div>
+            
+            <Link to='/maintenance/add'><div className={s.link_add}>Добавить ТО</div></Link>
+            
         </div>
     );
 };

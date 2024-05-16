@@ -11,7 +11,7 @@ const ItemMachin = ({model_id, serial_number}) => {
 
     return (
         <div className={s.unit}>
-            <div>{store.getValueLabel(modelData.entity_name)}</div>
+            <div className={s.entity_name}>{store.getValueLabel(modelData.entity_name)}</div>
             <div>Заводской номер - {serial_number}</div>
             <div>Название - {modelData.name}</div>
             <div>{modelData.description}</div>

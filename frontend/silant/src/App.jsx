@@ -8,7 +8,7 @@ import SearchMaintenance from './components/searchMaintenance'
 import { Context } from '@/main'
 import AddMaintenance from './components/addMaintenance'
 import DetailMashine from './components/detailMashine'
-import TitlePage from './components/titlePage'
+import TitleRole from './components/titleRole'
 import SearchClaims from './components/searchClaims'
 import AddClaims from './components/addClaims'
 
@@ -25,6 +25,7 @@ function App() {
 	return (
 		<>
 			<Header />
+			<TitleRole />
 			<Routes>
 				<Route path="/" element={<Search />} />
 				<Route path="/machine" element={<Search />} />

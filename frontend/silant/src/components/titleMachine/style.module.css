@@ -1,0 +1,28 @@
+.unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: var(--silant-blue);
+}
+.item {
+    margin: 0px;
+}
+.title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    
+
+    
+}
+.sing {
+    border: 3px solid var(--silant-blue);
+    border-radius: 10px; 
+    padding: 30px;
+    
+    h1, p {
+        margin: 0px;
+    }
+}

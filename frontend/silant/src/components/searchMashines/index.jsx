@@ -6,7 +6,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '@/main'
 import ItemModel from '../searchMaintenance/itemModel';
 import Menu from '../menu';
-import TitlePage from '../titlePage';
 import InputSample from '../inputText';
 
 
@@ -62,8 +61,9 @@ const Search = () => {
                 if (error.response.status === 401) {
                     console.error('запускаем рефреш');
                     store.handlerRefreshToken(localStorage.getItem('refreshToken'))
+                } else {
+                    console.error('Error fetching data:', error);
                 }
-                console.error('Error fetching data:', error);
             });
     }, [store.token, search]);
 
@@ -85,7 +85,6 @@ const Search = () => {
 
     return (
         <div className={s.unit}>
-            {store.isAuth ? (<TitlePage />) : ''}
             <h2>Проверьте комплектацию и технические характеристики техники Силант</h2>
             {store.isAuth ? (<Menu />) : ''}
             <div className={s.search}>
@@ -163,7 +162,7 @@ const Search = () => {
                                     <td>{item.client.name}</td>
                                     <td>{item.consignee}</td>
                                     <td>{item.delivery_address}</td>
-                                    <td>{item.equipment_configuration}</td>
+                                    <td><div className={s.truncate}>{item.equipment_configuration}</div></td>
                                     <td>{item.service_company.name}</td>
                                     </>
                                 ) : ''}

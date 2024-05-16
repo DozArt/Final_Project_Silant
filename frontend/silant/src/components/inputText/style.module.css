@@ -9,13 +9,13 @@
         font-weight: 400;
         line-height: normal;
         letter-spacing: 0.32px;
-        margin: 15px 0;
+        margin: 5px 0;
     }
 
     input, select {
         /* height: 41px; */
         /* padding: 0 17px; */
-        /* border-radius: 5px; */
+        border-radius: 5px;
         border: 1px solid #C7C7C7;
         background: #FFF;
         box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.05);

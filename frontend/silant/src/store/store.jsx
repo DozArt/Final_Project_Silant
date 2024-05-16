@@ -48,6 +48,8 @@ class Store {
                 break
             case 'client':
                 this.role = 'клиент'
+            default:
+                this.role = 'role is not defined'
         }
     }
     setAuth(bool) { this.isAuth = bool; }
@@ -137,7 +139,7 @@ class Store {
                 .then(response => {
                     this.setMachine(response.data);
                     console.log('=> setData detail Mashine')
-                    return response.data
+                    return response.data  // проверь, оно тут нужно?
                 })
         } catch (error) {
             if (error.response.status === 401) {
@@ -152,8 +154,10 @@ class Store {
     async handleLogout() {
         try {
             this.setAuth(false)
+            this.token = ``;
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
+
           } catch (err) {
             console.log("logout error");
           }

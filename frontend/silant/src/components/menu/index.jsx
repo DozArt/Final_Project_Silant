@@ -13,12 +13,13 @@ const Menu = () => {
     const url_maintenance = '/maintenance'
     // если есть id то ссылка другая
     return (
+        store.isAuth ? (
         <div className={s.unit}>
-            <Link to={`/machine${id ? '/'+id : ''}`}>Общая информация</Link>
-            <Link to={`/maintenance${id ? '/'+id : ''}`}>ТО</Link>
-            <Link to={`/claims${id ? '/'+id : ''}`}>Рекламации</Link>
+            <Link to={`/machine${id ? '/'+id : ''}`}><div>Общая информация</div></Link>
+            <Link to={`/maintenance${id ? '/'+id : ''}`}><div>ТО</div></Link>
+            <Link to={`/claims${id ? '/'+id : ''}`}><div>Рекламации</div></Link>
         </div>
-        
+    ) : ''
     );
 };
 

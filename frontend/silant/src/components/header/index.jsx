@@ -10,11 +10,11 @@ const Header = () => {
     return (
         <div className={s.unit}>
             <div className={s.top_string}>
-            <Link to='/machine'><img src={logo_img} className={s.logo} /></Link>
+            <Link to='/machine'><div className={s.logo}></div></Link>
                 <a className={s.contacts}>+1 234 56-78-90, telegram</a>
                 <Authorization />
             </div>
-            <h3 className={s.title}>Электронно-сервисная книжка "Мой Силант"</h3>
+            <h2 className={s.title}>Электронно-сервисная книжка "Мой Силант"</h2>
             
         </div>
     );

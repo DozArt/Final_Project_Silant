@@ -1,5 +1,6 @@
 .unit {
     background-color: var(--silant-yellow);
+    border-radius: 10px;
     min-width: 300px;
     /* padding: 10px; */
     flex-grow: 1;
@@ -7,4 +8,9 @@
     div {
         margin: 10px;
     }
+}
+.entity_name {
+    text-align: center;
+    color: var(--silant-blue);
+    font-size: 20px;
 }

@@ -22,5 +22,19 @@
     
 }
 .logo {
-    width: 100px;
+    width: 250px;
+    height: 70px;
+    background: url(../../public/images/Logotype-RGB.svg) no-repeat 0 20px; /* Параметры фона */
+    background-size: 250px;
+}
+@media screen and (max-width: 1000px) {
+
+    h2 {
+        text-align: center;
+    }
+    .logo {
+        width: 100px;
+        background: url(../../public/images/Logotype.svg) no-repeat 0 0; /* Параметры фона */
+        background-size: 100px;
+    }
 }

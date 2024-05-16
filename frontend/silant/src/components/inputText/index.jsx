@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import s from './style.module.css'
 
-const InputSample = ({label, type, name, onChange, onClick, value, select, defaultValue, errorMesage, placeholder}) => {
+const InputSample = ({label, type, name, onChange, onClick, value, select, defaultValue, errorMesage, placeholder, autoComplete}) => {
 
     const [ditry, setDitry] = useState(false)
     const blurHandler = (e) => {
@@ -48,6 +48,7 @@ const InputSample = ({label, type, name, onChange, onClick, value, select, defau
                     type = {inputType}
                     id={name}
                     placeholder={placeholder}
+                    autoComplete={autoComplete}
                 />
             )}
                 {ditry && <div id='error' className={s.error_state}>{errorMesage}</div>}

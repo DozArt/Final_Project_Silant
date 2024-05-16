@@ -1,3 +1,6 @@
+.unit {
+    padding: 0 20px;
+}
 .all_data {
     display: flex;
     flex-direction: row;

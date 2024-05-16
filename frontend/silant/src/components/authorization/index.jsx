@@ -2,6 +2,7 @@ import React, {useContext, useState, useEffect} from 'react';
 import s from './authorization.module.css'
 import { observer } from 'mobx-react-lite'
 import { Context } from '@/main'
+import InputSample from '../inputText';
 
 
 const Authorization = () => {
@@ -39,27 +40,28 @@ const Authorization = () => {
 
     const passwordHandler = (e) => {
         setPassword(e.target.value)
-
+        setLoginAttemptError('');
+        
         if (e.target.value.length < 5) {
             setPasswordError('Неправильный пароль')
         } else {
             setPasswordError('')
-            setLoginAttemptError('');
         }
     }
     const handleLogin = async (login, password) => {
         try {
             await store.handleLogin(login, password);
+            switch_activ()
         } catch (error) {
             console.error('Error during login in form:', error);
-            // setLoginAttemptError('Неправильный логин или пароль');
+            setLoginAttemptError('Неправильный логин или пароль');
         }
     };
     return (
         <>
             {store.isAuth ? (
-                <div>
-                    {store.dataUser.username}
+                <div className={s.user}>
+                    <div className={s.user_name}>{store.dataUser.username}</div>
                     <button onClick={() => store.handleLogout()}>Выйти</button>
                 </div>
             ) : (
@@ -70,26 +72,26 @@ const Authorization = () => {
             
             <div className={activ ? s.modal_on : s.modal_off} onClick={switch_activ}>
                 <div className={s.content} onClick={(event) => event.stopPropagation()}>
-                    <button className={s.close} onClick={switch_activ}>X</button>
-                        <form onSubmit={e => e.preventDefault()}>
-                            <input 
-                                // onBlur={e => blurHandler(e)}
-                                // value={value}
-                                type = 'text'
-                                placeholder='login'
-                                autoComplete="current-login"
-                                onChange={e => emailHandler(e)}
-                            />
-                            <input 
-                                // onBlur={e => blurHandler(e)}
-                                // value={value}
-                                type = 'password'
-                                placeholder='password'
-                                autoComplete="current-password"
-                                onChange={e => passwordHandler(e)}
-                            />
-                            <button onClick={() => handleLogin(login, password)} disabled={!validation}>Войти</button>
-                        </form>
+                    <a className={s.close} onClick={switch_activ}>X</a>
+                    <form onSubmit={e => e.preventDefault()}>
+                        <InputSample 
+                            label='Логин:'
+                            type = 'text'
+                            placeholder='login'
+                            autoComplete="current-login"
+                            onChange={e => emailHandler(e)}
+                            errorMesage={loginError}
+                        />
+                        <InputSample 
+                            label='Пароль:'
+                            type = 'password'
+                            placeholder='password'
+                            autoComplete="current-password"
+                            onChange={e => passwordHandler(e)}
+                            errorMesage={passwordError + loginAttemptError}
+                        />
+                        <button onClick={() => handleLogin(login, password)} disabled={!validation}>Войти</button>
+                    </form>
                 </div>
             </div>
         </>

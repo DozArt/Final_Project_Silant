@@ -1,28 +1,17 @@
 .unit {
     display: flex;
     flex-direction: column;
+    padding: 20px;
 }
 .scrolling {
     max-width: 100vw;
     overflow-x: auto;
 }
-.table {
-    margin: auto;
-
-    thead {
-        font-size: 12px;
-        background-color: #163E6C;
-        color: #EBE6D6;
-    }
-
-    th {
-        padding: 5px;
-        min-width: 19px;
-    }
-
-    td {
-        font-size: 12px;
-    }
-
-
+.link_add {
+    border: 1px solid var(--silant-blue);
+    border-radius: 3px;
+    width: 130px;
+    text-align: center;
+    font-size: 18px;
+    margin-top: 20px;
 }
